@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodEase – Food Billing System | Smart Restaurant Billing & Order Management</title>
+    <meta name="description" content="Modern, responsive Food Billing System and Restaurant Management web application built with pure Object-Oriented JavaScript.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍴</text></svg>">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Chart.js for Interactive Dashboard Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Backdrop for Mobile Sidebar -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <!-- ==================================================================
+             1. SIDEBAR NAVIGATION
+             ================================================================== -->
+        <aside class="app-sidebar" id="appSidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo-wrap">
+                    <span class="brand-icon">🍴</span>
+                    <div class="brand-text">
+                        <h1 class="brand-name">FoodEase</h1>
+                        <span class="brand-tagline">Smart Restaurant POS</span>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">MAIN MENU</div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#dashboard" class="sidebar-nav-link active" data-view="dashboard">
+                            <i class="fa-solid fa-chart-pie nav-icon"></i>
+                            <span class="nav-label">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#new-order" class="sidebar-nav-link" data-view="new-order">
+                            <i class="fa-solid fa-cash-register nav-icon"></i>
+                            <span class="nav-label">New Order (POS)</span>
+                            <span class="nav-badge" id="cartBadgeCount">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#food-menu" class="sidebar-nav-link" data-view="new-order">
+                            <i class="fa-solid fa-bowl-food nav-icon"></i>
+                            <span class="nav-label">Food Menu</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#orders" class="sidebar-nav-link" data-view="orders">
+                            <i class="fa-solid fa-receipt nav-icon"></i>
+                            <span class="nav-label">Order History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#customers" class="sidebar-nav-link" data-view="customers">
+                            <i class="fa-solid fa-users nav-icon"></i>
+                            <span class="nav-label">Customers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#reports" class="sidebar-nav-link" data-view="reports">
+                            <i class="fa-solid fa-chart-simple nav-icon"></i>
+                            <span class="nav-label">Reports & Analytics</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="nav-section-title">SYSTEM & OOP</div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#oop-guide" class="sidebar-nav-link" data-view="oop-guide">
+                            <i class="fa-solid fa-graduation-cap nav-icon"></i>
+                            <span class="nav-label">OOP Architecture</span>
+                            <span class="nav-pill-tag">Viva Prep</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#settings" class="sidebar-nav-link" data-view="settings">
+                            <i class="fa-solid fa-gear nav-icon"></i>
+                            <span class="nav-label">Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="oop-project-badge">
+                    <i class="fa-solid fa-code"></i>
+                    <div>
+                        <strong>OOP Project Ready</strong>
+                        <p>ES6 Classes • Encapsulation • Inheritance</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ==================================================================
+             2. MAIN APP CONTENT
+             ================================================================== -->
+        <div class="main-wrapper">
+            <!-- Header Bar -->
+            <header class="app-header">
+                <div class="header-left">
+                    <button type="button" class="btn-icon mobile-menu-btn" id="sidebarToggleBtn" aria-label="Toggle navigation menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="header-title-wrap">
+                        <h2 class="header-title">FoodEase – Food Billing System</h2>
+                        <span class="header-subtitle">Smart Restaurant Billing & Order Management</span>
+                    </div>
+                </div>
+
+                <div class="header-center">
+                    <div class="global-search-bar">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="headerSearchInput" placeholder="Quick search menu items (e.g. Pizza, Burger)..." autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="header-clock" id="headerDateTime">
+                        <i class="fa-regular fa-clock"></i> Loading date/time...
+                    </div>
+
+                    <button type="button" class="btn-theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+                        <i class="fa-solid fa-moon"></i>
+                        <span>Dark Mode</span>
+                    </button>
+
+                    <!-- Mobile Cart Trigger Button -->
+                    <button type="button" class="btn-icon mobile-cart-trigger" id="mobileCartToggleBtn" title="View Current Order">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="cart-floating-badge" id="mobileCartBadge">0</span>
+                    </button>
+
+                    <div class="user-profile-badge" title="Active Cashier / Manager">
+                        <div class="user-avatar"><i class="fa-solid fa-user-tie"></i></div>
+                        <div class="user-meta">
+                            <span class="user-name">Cashier Desk 1</span>
+                            <span class="user-role">Manager Access</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Scrollable Body -->
+            <main class="app-main-content">
+
+                <!-- ==============================================================
+                     VIEW 1: DASHBOARD
+                     ============================================================== -->
+                <section class="view-section active" id="view-dashboard">
+                    <div class="view-header">
+                        <div>
+                            <h2 class="view-title">Dashboard Overview</h2>
+                            <p class="view-desc">Live performance summary, today's transactions, and financial analytics.</p>
+                        </div>
+                        <div class="view-actions">
+                            <button type="button" class="btn btn-primary" onclick="app.switchView('new-order')">
+                                <i class="fa-solid fa-plus"></i> New Order
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Summary Cards Grid -->
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-icon-wrap bg-orange-subtle text-orange">
+                                <i class="fa-solid fa-receipt"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <span class="kpi-label">Total Orders</span>
+                                <h3 class="kpi-value" id="dashTotalOrders">0</h3>
+                                <span class="kpi-trend text-success"><i class="fa-solid fa-arrow-trend-up"></i> Lifetime completed</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon-wrap bg-green-subtle text-green">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <span class="kpi-label">Today's Sales</span>
+                                <h3 class="kpi-value" id="dashTodaySales">₹0.00</h3>
+                                <span class="kpi-trend text-success"><i class="fa-solid fa-circle-check"></i> Real-time GST audited</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon-wrap bg-blue-subtle text-blue">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <span class="kpi-label">Total Customers</span>
+                                <h3 class="kpi-value" id="dashTotalCustomers">0</h3>
+                                <span class="kpi-trend text-muted"><i class="fa-solid fa-user-check"></i> Verified contacts</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon-wrap bg-purple-subtle text-purple">
+                                <i class="fa-solid fa-utensils"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <span class="kpi-label">Avg Order Value</span>
+                                <h3 class="kpi-value" id="dashAvgOrderVal">₹0.00</h3>
+                                <span class="kpi-trend text-info"><i class="fa-solid fa-calculator"></i> Per transaction</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="dashboard-charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div class="chart-title-wrap">
+                                    <h4 class="chart-title">Weekly Sales Revenue</h4>
+                                    <span class="chart-subtitle">Daily billed totals (₹) across the past week</span>
+                                </div>
+                                <span class="badge badge-primary">Bar Chart</span>
+                            </div>
+                            <div class="chart-canvas-wrap">
+                                <canvas id="dashboardSalesChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div class="chart-title-wrap">
+                                    <h4 class="chart-title">Sales by Food Category</h4>
+                                    <span class="chart-subtitle">Item volume breakdown by cuisine / type</span>
+                                </div>
+                                <span class="badge badge-secondary">Donut Chart</span>
+                            </div>
+                            <div class="chart-canvas-wrap">
+                                <canvas id="dashboardCategoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders Table Section -->
+                    <div class="content-card recent-orders-card">
+                        <div class="content-card-header">
+                            <div>
+                                <h3 class="content-card-title">Recent Transactions</h3>
+                                <p class="content-card-desc">Most recently generated food orders and tax invoices</p>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="app.switchView('orders')">
+                                View All Orders <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Payment</th>
+                                        <th>Order Type</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboardRecentOrdersTbody">
+                                    <!-- Populated via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==============================================================
+                     VIEW 2: NEW ORDER / POS (FOOD MENU & BILLING CART)
+                     ============================================================== -->
+                <section class="view-section" id="view-new-order">
+                    <div class="pos-layout">
+                        <!-- Left & Center: Food Catalogue & Filtering -->
+                        <div class="pos-catalog-panel">
+                            <div class="pos-catalog-header">
+                                <div class="search-filter-row">
+                                    <div class="menu-search-box">
+                                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                        <input type="text" id="menuSearchInput" placeholder="Search dish name, description, ingredients..." autocomplete="off">
+                                        <button type="button" class="clear-search-btn" id="clearSearchBtn" title="Clear search">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                    <span class="menu-items-count" id="menuItemCountDisplay">Showing all items</span>
+                                </div>
+
+                                <!-- Category Filter Pills -->
+                                <div class="category-pills-scroll" id="categoryPillsContainer">
+                                    <!-- Populated via JS: All, Burgers, Pizza, Indian, Chinese, Beverages, Desserts -->
+                                </div>
+                            </div>
+
+                            <!-- Food Menu Cards Grid -->
+                            <div class="food-menu-grid" id="foodMenuGrid">
+                                <!-- Populated dynamically from FoodItem, VegItem, and NonVegItem instances -->
+                            </div>
+
+                            <!-- Empty Menu State -->
+                            <div class="empty-state-wrap" id="menuEmptyState" style="display: none;">
+                                <div class="empty-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                                <h3>No food items found.</h3>
+                                <p>We couldn't find any dishes matching your search query or category filter.</p>
+                            </div>
+                        </div>
+
+                        <!-- Right Side: Current Order / Billing Panel -->
+                        <div class="pos-cart-panel" id="cartSidebarPanel">
+                            <div class="cart-panel-header">
+                                <div class="cart-title-wrap">
+                                    <h3 class="cart-title"><i class="fa-solid fa-cart-shopping"></i> Current Order</h3>
+                                    <span class="cart-subtitle">Review items & finalize customer bill</span>
+                                </div>
+                                <div class="cart-header-actions">
+                                    <button type="button" class="btn-clear-cart" id="clearCartBtn" title="Clear all items in cart">
+                                        <i class="fa-solid fa-trash-can"></i> Clear
+                                    </button>
+                                    <button type="button" class="btn-close-mobile-cart" id="closeMobileCartBtn" title="Close Cart">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Empty Cart State -->
+                            <div class="cart-empty-state" id="cartEmptyState">
+                                <div class="cart-empty-graphic">🛒</div>
+                                <h4>Your cart is empty</h4>
+                                <p>Browse the menu on the left and click "Add" to start crafting a customer order.</p>
+                            </div>
+
+                            <!-- Active Cart Content -->
+                            <div class="cart-content-wrap" id="cartContentWrap" style="display: none;">
+                                <!-- Cart Items List -->
+                                <div class="cart-items-scroll" id="cartItemsList">
+                                    <!-- Populated via Cart.js -->
+                                </div>
+
+                                <!-- Order Type Selector Tabs -->
+                                <div class="order-type-section">
+                                    <label class="section-micro-label">SELECT ORDER TYPE</label>
+                                    <div class="order-type-btn-group">
+                                        <button type="button" class="order-type-btn active" data-type="dine-in">
+                                            <i class="fa-solid fa-chair"></i>
+                                            <span>Dine In</span>
+                                        </button>
+                                        <button type="button" class="order-type-btn" data-type="takeaway">
+                                            <i class="fa-solid fa-bag-shopping"></i>
+                                            <span>Takeaway</span>
+                                        </button>
+                                        <button type="button" class="order-type-btn" data-type="delivery">
+                                            <i class="fa-solid fa-motorcycle"></i>
+                                            <span>Delivery</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Customer Details Form -->
+                                <div class="customer-form-section">
+                                    <label class="section-micro-label">CUSTOMER INFORMATION</label>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group flex-1">
+                                            <label for="custNameInput" class="form-label">Customer Name <span class="required-star">*</span></label>
+                                            <div class="input-with-icon">
+                                                <i class="fa-solid fa-user input-icon"></i>
+                                                <input type="text" id="custNameInput" class="form-control" placeholder="e.g. Rahul Sharma" required>
+                                            </div>
+                                            <span class="form-error-msg" id="nameError"></span>
+                                        </div>
+
+                                        <div class="form-group flex-1">
+                                            <label for="custPhoneInput" class="form-label">Phone Number <span class="required-star">*</span></label>
+                                            <div class="input-with-icon">
+                                                <i class="fa-solid fa-phone input-icon"></i>
+                                                <input type="tel" id="custPhoneInput" class="form-control" placeholder="10-digit number" maxlength="10" required>
+                                            </div>
+                                            <span class="form-error-msg" id="phoneError"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group flex-1">
+                                            <label for="custEmailInput" class="form-label">Email Address <span class="optional-label">(Optional)</span></label>
+                                            <div class="input-with-icon">
+                                                <i class="fa-regular fa-envelope input-icon"></i>
+                                                <input type="email" id="custEmailInput" class="form-control" placeholder="e.g. rahul@example.com">
+                                            </div>
+                                            <span class="form-error-msg" id="emailError"></span>
+                                        </div>
+
+                                        <!-- Dynamic: Table Number for Dine In -->
+                                        <div class="form-group flex-1" id="tableNumberGroup">
+                                            <label for="custTableInput" class="form-label">Table Number <span class="required-star">*</span></label>
+                                            <div class="input-with-icon">
+                                                <i class="fa-solid fa-utensils input-icon"></i>
+                                                <input type="text" id="custTableInput" class="form-control" placeholder="e.g. 12" value="12">
+                                            </div>
+                                            <span class="form-error-msg" id="tableError"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Dynamic: Delivery Address for Delivery -->
+                                    <div class="form-group" id="deliveryAddressGroup" style="display: none;">
+                                        <label for="custAddressInput" class="form-label">Delivery Address <span class="required-star">*</span></label>
+                                        <div class="input-with-icon">
+                                            <i class="fa-solid fa-location-dot input-icon"></i>
+                                            <input type="text" id="custAddressInput" class="form-control" placeholder="Flat / Street / Apartment details">
+                                        </div>
+                                        <span class="form-error-msg" id="addressError"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Discount & Special Offers -->
+                                <div class="discount-section">
+                                    <label class="section-micro-label">APPLY DISCOUNT</label>
+                                    <div class="discount-presets-row">
+                                        <button type="button" class="discount-preset-btn active" data-percent="0">None</button>
+                                        <button type="button" class="discount-preset-btn" data-percent="5">5%</button>
+                                        <button type="button" class="discount-preset-btn" data-percent="10">10%</button>
+                                        <button type="button" class="discount-preset-btn" data-percent="15">15%</button>
+                                        <button type="button" class="discount-preset-btn" data-percent="20">20%</button>
+                                        <div class="custom-discount-wrap">
+                                            <input type="number" id="customDiscountInput" min="0" max="100" placeholder="Custom %">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Method Cards -->
+                                <div class="payment-section">
+                                    <label class="section-micro-label">PAYMENT METHOD</label>
+                                    <div class="payment-cards-grid">
+                                        <label class="payment-card active">
+                                            <input type="radio" name="paymentOption" value="Cash" checked>
+                                            <i class="fa-solid fa-money-bill-wave payment-card-icon"></i>
+                                            <span class="payment-card-name">Cash</span>
+                                        </label>
+
+                                        <label class="payment-card">
+                                            <input type="radio" name="paymentOption" value="UPI">
+                                            <i class="fa-solid fa-qrcode payment-card-icon"></i>
+                                            <span class="payment-card-name">UPI / QR</span>
+                                        </label>
+
+                                        <label class="payment-card">
+                                            <input type="radio" name="paymentOption" value="Credit Card">
+                                            <i class="fa-solid fa-credit-card payment-card-icon"></i>
+                                            <span class="payment-card-name">Credit Card</span>
+                                        </label>
+
+                                        <label class="payment-card">
+                                            <input type="radio" name="paymentOption" value="Debit Card">
+                                            <i class="fa-regular fa-credit-card payment-card-icon"></i>
+                                            <span class="payment-card-name">Debit Card</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Bill Calculation Breakdown -->
+                                <div class="bill-breakdown-card">
+                                    <div class="bill-line">
+                                        <span class="bill-line-label">Subtotal</span>
+                                        <span class="bill-line-val" id="billSubtotal">₹0.00</span>
+                                    </div>
+                                    <div class="bill-line text-success" id="discountRow" style="display: none;">
+                                        <span class="bill-line-label">Discount Applied</span>
+                                        <span class="bill-line-val" id="billDiscount">-₹0.00</span>
+                                    </div>
+                                    <div class="bill-line">
+                                        <span class="bill-line-label" id="gstLabel">GST (5%)</span>
+                                        <span class="bill-line-val" id="billGST">₹0.00</span>
+                                    </div>
+                                    <div class="bill-line text-info" id="deliveryFeeRow" style="display: none;">
+                                        <span class="bill-line-label">Delivery Charges</span>
+                                        <span class="bill-line-val" id="billDeliveryFee">₹40.00</span>
+                                    </div>
+                                    <div class="bill-divider"></div>
+                                    <div class="bill-grand-total">
+                                        <div>
+                                            <span class="grand-total-label">Grand Total</span>
+                                            <span class="grand-total-sub">Includes all applicable taxes</span>
+                                        </div>
+                                        <span class="grand-total-amount" id="billGrandTotal">₹0.00</span>
+                                    </div>
+                                </div>
+
+                                <!-- Generate Bill CTA Button -->
+                                <div class="generate-bill-action">
+                                    <button type="button" class="btn btn-primary btn-generate-bill" id="generateBillBtn">
+                                        <i class="fa-solid fa-bolt"></i> Generate Bill & Invoice
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==============================================================
+                     VIEW 3: ORDERS HISTORY
+                     ============================================================== -->
+                <section class="view-section" id="view-orders">
+                    <div class="view-header">
+                        <div>
+                            <h2 class="view-title">Order History & Invoices</h2>
+                            <p class="view-desc">Search, inspect, reprint, or manage past customer orders.</p>
+                        </div>
+                        <div class="view-actions">
+                            <span class="badge badge-primary" id="totalOrdersCountBadge">0 Orders</span>
+                            <button type="button" class="btn btn-outline-primary" id="exportOrdersBtn">
+                                <i class="fa-solid fa-download"></i> Export JSON
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="table-filter-bar">
+                            <div class="menu-search-box flex-1">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                                <input type="text" id="orderFilterSearchInput" placeholder="Filter by Order ID, Customer name, Phone, or Payment method..." autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Date & Time</th>
+                                        <th>Order Type</th>
+                                        <th>Items</th>
+                                        <th>Amount</th>
+                                        <th>Payment</th>
+                                        <th>Status</th>
+                                        <th class="text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTableTbody">
+                                    <!-- Populated via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="empty-state-wrap" id="ordersEmptyState" style="display: none;">
+                            <div class="empty-icon"><i class="fa-solid fa-receipt"></i></div>
+                            <h3>No orders recorded yet.</h3>
+                            <p>Generate orders from the New Order POS tab to build your restaurant history.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==============================================================
+                     VIEW 4: CUSTOMERS DIRECTORY
+                     ============================================================== -->
+                <section class="view-section" id="view-customers">
+                    <div class="view-header">
+                        <div>
+                            <h2 class="view-title">Customer Directory</h2>
+                            <p class="view-desc">Aggregated customer records, lifetime spending, and frequency of orders.</p>
+                        </div>
+                        <div class="view-actions">
+                            <span class="badge badge-primary" id="customersCountBadge">0 Customers</span>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Customer Name</th>
+                                        <th>Mobile Phone</th>
+                                        <th>Email Address</th>
+                                        <th>Orders Placed</th>
+                                        <th>Lifetime Spend</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customersTableTbody">
+                                    <!-- Populated via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==============================================================
+                     VIEW 5: REPORTS & ANALYTICS
+                     ============================================================== -->
+                <section class="view-section" id="view-reports">
+                    <div class="view-header">
+                        <div>
+                            <h2 class="view-title">Reports & Business Analytics</h2>
+                            <p class="view-desc">Key performance indicators, tax audit summaries, and product popularity.</p>
+                        </div>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-icon-wrap bg-green-subtle text-green">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <span class="kpi-label">Gross Revenue</span>
+                                <h3 class="kpi-value" id="repTotalRevenue">₹0.00</h3>
+                                <span class="kpi-trend text-muted">All completed orders</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon-wrap bg-orange-subtle text-orange">
+                                <i class="fa-solid fa-receipt"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <span class="kpi-label">Total Transactions</span>
+                                <h3 class="kpi-value" id="repTotalOrders">0</h3>
+                                <span class="kpi-trend text-muted">Billed invoices</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon-wrap bg-blue-subtle text-blue">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <span class="kpi-label">Average Order Value</span>
+                                <h3 class="kpi-value" id="repAvgOrderValue">₹0.00</h3>
+                                <span class="kpi-trend text-muted">Ticket size average</span>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon-wrap bg-purple-subtle text-purple">
+                                <i class="fa-solid fa-landmark"></i>
+                            </div>
+                            <div class="kpi-content">
+                                <span class="kpi-label">Total GST Collected</span>
+                                <h3 class="kpi-value" id="repTotalGST">₹0.00</h3>
+                                <span class="kpi-trend text-muted">5% Combined CGST+SGST</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div class="chart-title-wrap">
+                                    <h4 class="chart-title">Payment Methods Distribution</h4>
+                                    <span class="chart-subtitle">Transactions by Cash, UPI, Credit Card, Debit Card</span>
+                                </div>
+                                <span class="badge badge-info">Pie Chart</span>
+                            </div>
+                            <div class="chart-canvas-wrap">
+                                <canvas id="reportPaymentChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div class="chart-title-wrap">
+                                    <h4 class="chart-title">Order Fulfillment Types</h4>
+                                    <span class="chart-subtitle">Dine In vs Takeaway vs Home Delivery</span>
+                                </div>
+                                <span class="badge badge-secondary">Doughnut Chart</span>
+                            </div>
+                            <div class="chart-canvas-wrap">
+                                <canvas id="reportOrderTypeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top 5 Best Selling Food Items -->
+                    <div class="content-card">
+                        <div class="content-card-header">
+                            <div>
+                                <h3 class="content-card-title">Top 5 Best-Selling Dishes</h3>
+                                <p class="content-card-desc">Ranked by total quantity sold across all customer bills</p>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Dish Name</th>
+                                        <th>Portions Sold</th>
+                                        <th>Total Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportTopItemsTbody">
+                                    <!-- Populated via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==============================================================
+                     VIEW 6: SETTINGS
+                     ============================================================== -->
+                <section class="view-section" id="view-settings">
+                    <div class="view-header">
+                        <div>
+                            <h2 class="view-title">System Settings & Configuration</h2>
+                            <p class="view-desc">Configure restaurant metadata, taxation rates, and reset demo data.</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-grid">
+                        <div class="content-card">
+                            <h3 class="content-card-title mb-3">Restaurant Metadata & Tax Configuration</h3>
+                            <form id="settingsForm">
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="settingRestName" class="form-label">Restaurant Name</label>
+                                        <input type="text" id="settingRestName" class="form-control" required>
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="settingSubtitle" class="form-label">Subtitle / Slogan</label>
+                                        <input type="text" id="settingSubtitle" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="settingPhone" class="form-label">Contact Phone</label>
+                                        <input type="text" id="settingPhone" class="form-control" required>
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="settingEmail" class="form-label">Billing Email</label>
+                                        <input type="email" id="settingEmail" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label for="settingGSTIN" class="form-label">GSTIN / Tax ID Number</label>
+                                        <input type="text" id="settingGSTIN" class="form-control" required>
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label for="settingGSTRate" class="form-label">Standard GST Rate (%)</label>
+                                        <input type="number" id="settingGSTRate" class="form-control" min="0" max="28" step="0.5" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="settingAddress" class="form-label">Physical Address</label>
+                                    <input type="text" id="settingAddress" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="settingDefaultDiscount" class="form-label">Default POS Discount (%)</label>
+                                    <input type="number" id="settingDefaultDiscount" class="form-control" min="0" max="50">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa-solid fa-floppy-disk"></i> Save Settings
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="content-card">
+                            <h3 class="content-card-title mb-3">Data Management & Reset</h3>
+                            <p class="text-muted mb-4">
+                                Useful for college demos and presentations. You can restore pre-configured sample orders, 
+                                demo customers, and realistic metrics with a single click.
+                            </p>
+
+                            <div class="demo-reset-box">
+                                <div class="demo-reset-info">
+                                    <h4>Restore Demo Sample Data</h4>
+                                    <p>Clears custom orders and injects 4 pre-made orders (Dine-in, Takeaway, Delivery) with rich charts.</p>
+                                </div>
+                                <button type="button" class="btn btn-warning" id="resetDemoDataBtn">
+                                    <i class="fa-solid fa-rotate-left"></i> Restore Demo Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==============================================================
+                     VIEW 7: OOP ARCHITECTURE GUIDE (VIVA CHEAT-SHEET)
+                     ============================================================== -->
+                <section class="view-section" id="view-oop-guide">
+                    <div class="view-header">
+                        <div>
+                            <h2 class="view-title">Object-Oriented Programming (OOP) Architecture</h2>
+                            <p class="view-desc">Detailed explanation of the 6 core OOP concepts implemented in this application for your college viva/demo.</p>
+                        </div>
+                    </div>
+
+                    <div class="oop-concepts-grid">
+                        <!-- Concept 1: Class & Object -->
+                        <div class="oop-card">
+                            <div class="oop-card-badge bg-orange-subtle text-orange">Concept 1</div>
+                            <h3 class="oop-card-title">Class & Object</h3>
+                            <p class="oop-card-desc">
+                                A <strong>Class</strong> is a blueprint or template, while an <strong>Object</strong> is a concrete runtime instance.
+                            </p>
+                            <div class="oop-code-snippet">
+<pre><code>// Class Definition
+class FoodItem {
+    constructor(id, name, price) {
+        this.name = name;
+        this.price = price;
+    }
+}
+
+// Object Instantiation
+const burger = new VegItem("B01", "Burger", 120);</code></pre>
+                            </div>
+                            <div class="oop-application-note">
+                                <i class="fa-solid fa-circle-check text-success"></i> <strong>Used in FoodEase:</strong> FoodItem, Cart, CartItem, Customer, Billing, Order.
+                            </div>
+                        </div>
+
+                        <!-- Concept 2: Encapsulation -->
+                        <div class="oop-card">
+                            <div class="oop-card-badge bg-green-subtle text-green">Concept 2</div>
+                            <h3 class="oop-card-title">Encapsulation (Private Fields)</h3>
+                            <p class="oop-card-desc">
+                                Bundling data and methods together while hiding internal state using JavaScript private fields (<code>#fieldName</code>) and public getters/setters.
+                            </p>
+                            <div class="oop-code-snippet">
+<pre><code>class Billing {
+    #gstRate; // Private field (hidden)
+
+    constructor(gstRate = 5) {
+        this.#gstRate = gstRate;
+    }
+
+    getGSTRate() { return this.#gstRate; }
+    setGSTRate(rate) { /* bounds validation */ }
+}</code></pre>
+                            </div>
+                            <div class="oop-application-note">
+                                <i class="fa-solid fa-circle-check text-success"></i> <strong>Used in FoodEase:</strong> <code>#gstRate</code>, <code>#discountRate</code> in Billing; <code>#items</code> in Cart; <code>#phone</code> in Customer.
+                            </div>
+                        </div>
+
+                        <!-- Concept 3: Inheritance -->
+                        <div class="oop-card">
+                            <div class="oop-card-badge bg-blue-subtle text-blue">Concept 3</div>
+                            <h3 class="oop-card-title">Inheritance (extends & super)</h3>
+                            <p class="oop-card-desc">
+                                Child classes inherit properties and methods from parent classes, avoiding code duplication and establishing "is-a" hierarchies.
+                            </p>
+                            <div class="oop-code-snippet">
+<pre><code>class VegItem extends FoodItem {
+    constructor(id, name, cat, price, desc, img) {
+        super(id, name, cat, price, desc, 'veg', img);
+        this.dietaryTag = "100% Veg";
+    }
+}</code></pre>
+                            </div>
+                            <div class="oop-application-note">
+                                <i class="fa-solid fa-circle-check text-success"></i> <strong>Used in FoodEase:</strong> <code>VegItem</code> & <code>NonVegItem</code> inherit from <code>FoodItem</code>; <code>DineInOrder</code>, <code>TakeawayOrder</code>, and <code>DeliveryOrder</code> inherit from <code>Order</code>.
+                            </div>
+                        </div>
+
+                        <!-- Concept 4: Polymorphism -->
+                        <div class="oop-card">
+                            <div class="oop-card-badge bg-purple-subtle text-purple">Concept 4</div>
+                            <h3 class="oop-card-title">Polymorphism (Method Overriding)</h3>
+                            <p class="oop-card-desc">
+                                The same method name behaves differently depending on the class of object calling it.
+                            </p>
+                            <div class="oop-code-snippet">
+<pre><code>// Overridden in VegItem
+getBadgeHTML() {
+    return '&lt;span class="veg-badge"&gt;Pure Veg&lt;/span&gt;';
+}
+
+// Overridden in NonVegItem
+getBadgeHTML() {
+    return '&lt;span class="nonveg-badge"&gt;Non-Veg&lt;/span&gt;';
+}</code></pre>
+                            </div>
+                            <div class="oop-application-note">
+                                <i class="fa-solid fa-circle-check text-success"></i> <strong>Used in FoodEase:</strong> <code>getBadgeHTML()</code> and <code>getTypeDetails()</code> in FoodItem subclasses; <code>getOrderTypeBadge()</code> in Order subclasses.
+                            </div>
+                        </div>
+
+                        <!-- Concept 5: Abstraction -->
+                        <div class="oop-card">
+                            <div class="oop-card-badge bg-orange-subtle text-orange">Concept 5</div>
+                            <h3 class="oop-card-title">Abstraction</h3>
+                            <p class="oop-card-desc">
+                                Hiding complex background arithmetic, tax calculations, and validation rules behind intuitive public interfaces.
+                            </p>
+                            <div class="oop-code-snippet">
+<pre><code>// Caller simply invokes one clean method:
+const breakdown = billing.calculateBreakdown(subtotal, discount);
+// Caller receives clean totals without knowing
+// internal CGST/SGST splitting algorithms</code></pre>
+                            </div>
+                            <div class="oop-application-note">
+                                <i class="fa-solid fa-circle-check text-success"></i> <strong>Used in FoodEase:</strong> <code>Billing.calculateBreakdown()</code>, <code>Customer.validate()</code>.
+                            </div>
+                        </div>
+
+                        <!-- Concept 6: Factory Pattern -->
+                        <div class="oop-card">
+                            <div class="oop-card-badge bg-green-subtle text-green">Concept 6</div>
+                            <h3 class="oop-card-title">Factory Method Pattern</h3>
+                            <p class="oop-card-desc">
+                                A creational OOP design pattern that provides an interface for creating objects without specifying the exact class of object created.
+                            </p>
+                            <div class="oop-code-snippet">
+<pre><code>static createOrder(data) {
+    if (data.orderType === 'dine-in')
+        return new DineInOrder(...);
+    if (data.orderType === 'delivery')
+        return new DeliveryOrder(...);
+    return new TakeawayOrder(...);
+}</code></pre>
+                            </div>
+                            <div class="oop-application-note">
+                                <i class="fa-solid fa-circle-check text-success"></i> <strong>Used in FoodEase:</strong> <code>Order.createOrder()</code> accurately instantiates polymorphic subclasses from raw localStorage objects.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ======================================================================
+         3. INVOICE / RECEIPT MODAL
+         ====================================================================== -->
+    <div class="modal-overlay" id="invoiceModal">
+        <div class="modal-container receipt-modal">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <h3 class="modal-title"><i class="fa-solid fa-receipt"></i> Customer Bill Invoice</h3>
+                    <span class="modal-subtitle">Official computer-generated tax receipt</span>
+                </div>
+                <button type="button" class="btn-icon close-modal-btn" title="Close Modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Authentic Thermal Receipt Area (Clean print targeting) -->
+                <div class="receipt-print-container" id="receiptPrintArea">
+                    <!-- Populated dynamically via app.displayInvoice() -->
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close-modal-btn">
+                    <i class="fa-solid fa-xmark"></i> Close
+                </button>
+                <button type="button" class="btn btn-outline-primary" id="newOrderModalBtn">
+                    <i class="fa-solid fa-plus"></i> New Order
+                </button>
+                <button type="button" class="btn btn-primary" id="printInvoiceBtn">
+                    <i class="fa-solid fa-print"></i> Print Bill
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================
+         4. TOAST NOTIFICATIONS CONTAINER
+         ====================================================================== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ======================================================================
+         5. JAVASCRIPT OOP MODULES (LOADED IN DEPENDENCY ORDER)
+         ====================================================================== -->
+    <script src="js/FoodItem.js"></script>
+    <script src="js/Cart.js"></script>
+    <script src="js/Customer.js"></script>
+    <script src="js/Billing.js"></script>
+    <script src="js/Order.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

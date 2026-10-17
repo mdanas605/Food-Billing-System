@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff1eb"/>
+      <stop offset="100%" stop-color="#ace0f9"/>
+    </linearGradient>
+    <linearGradient id="bun" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e67e22"/>
+      <stop offset="100%" stop-color="#d35400"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <!-- Top Bun -->
+  <path d="M120 130 C120 70, 280 70, 280 130 Z" fill="url(#bun)"/>
+  <!-- Sesame seeds -->
+  <ellipse cx="170" cy="100" rx="3" ry="5" fill="#fef9e7" transform="rotate(30 170 100)"/>
+  <ellipse cx="200" cy="90" rx="3" ry="5" fill="#fef9e7"/>
+  <ellipse cx="230" cy="105" rx="3" ry="5" fill="#fef9e7" transform="rotate(-30 230 105)"/>
+  <!-- Lettuce -->
+  <path d="M110 135 Q130 145 150 135 T190 135 T230 135 T270 135 T290 135" stroke="#27ae60" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <!-- Tomato Slice -->
+  <rect x="125" y="145" width="150" height="12" rx="6" fill="#e74c3c"/>
+  <!-- Cheese -->
+  <polygon points="120,160 280,160 250,185 230,160" fill="#f1c40f"/>
+  <!-- Patty -->
+  <rect x="120" y="165" width="160" height="24" rx="8" fill="#5d4037"/>
+  <!-- Bottom Bun -->
+  <rect x="130" y="195" width="140" height="22" rx="10" fill="url(#bun)"/>
+  <text x="200" y="260" font-family="'Plus Jakarta Sans', sans-serif" font-size="18" font-weight="bold" fill="#333" text-anchor="middle">FoodEase Fresh Burger</text>
+</svg>
